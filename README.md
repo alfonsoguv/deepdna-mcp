@@ -17,9 +17,9 @@ Streamable HTTP, stateless, no API key, no account. Listed in the official MCP r
 | `list_genes` | The genes in the knowledge base, with a one-line summary and category for each |
 | `lookup_gene` | Everything curated about one gene: function, key variants with rsIDs, phenotypes, drug interactions, what a consumer genotyping array can and cannot tell you, and sources |
 | `lookup_variant` | One variant by dbSNP rsID: gene, star-allele or common name, alleles, functional effect, population frequency note and sources |
-| `lookup_drug_gene` | Guidance for a gene, optionally for one drug: guideline (CPIC or DPWG), summary, phenotype groups and sources |
+| `lookup_drug_gene` | Guidance for a gene, optionally for one drug: guideline (CPIC or DPWG where one exists), summary, phenotype groups and sources |
 
-Coverage today is 12 genes: CYP2C19, CYP2C9, CYP2D6, SLCO1B1, VKORC1, UGT1A1, G6PD, MTHFR, COMT, HFE, APOE and BRCA1, with 51 curated drug–gene pairs. It is a small, reviewed set, not a mirror of PharmGKB/ClinPGx. Every record lists its sources. The `level` field (the guideline's evidence grade) is `null` for every pair today.
+Coverage today is 12 genes: CYP2C19, CYP2C9, CYP2D6, SLCO1B1, VKORC1, UGT1A1, G6PD, MTHFR, COMT, HFE, APOE and BRCA1, with 51 curated drug–gene pairs across 11 of them: 40 cite a CPIC or DPWG guideline, the rest a drug label or the primary literature, and the `guideline` field says which. It is a small, reviewed set, not a mirror of PharmGKB/ClinPGx. Every record lists its sources. The `level` field (the guideline's evidence grade) is `null` for every pair today.
 
 ## Connect
 
