@@ -146,6 +146,7 @@ def test_drug_gene_path_cannot_leave_the_pgx_route(monkeypatch):
     seen = []
     monkeypatch.setattr(knowledge, "_get", lambda client, path: seen.append(path) or {})
     knowledge.drug_gene("../../genes", "a/b")
+    assert knowledge.drug_gene("..", None) == {} and knowledge.drug_gene("CYP2C19", "..") == {}
     assert seen == ["/pgx/..%2F..%2FGENES/a%2Fb"]
 
 

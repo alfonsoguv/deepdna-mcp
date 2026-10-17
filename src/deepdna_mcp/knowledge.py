@@ -65,6 +65,8 @@ def curated_variants() -> tuple[list[dict[str, Any]], str]:
 
 def drug_gene(gene: str, drug: str | None) -> dict[str, Any]:
     """CPIC or DPWG guidance for a gene, optionally for one drug, as the public API returns it."""
+    if not any(c.isalnum() for c in gene) or (drug is not None and not any(c.isalnum() for c in drug)):
+        return {}  # ".." would otherwise be resolved as a path segment
     path = f"/pgx/{quote(gene.strip().upper(), safe='')}" + (f"/{quote(drug.strip().lower(), safe='')}" if drug else "")
     with _client() as client:
         return _get(client, path)
