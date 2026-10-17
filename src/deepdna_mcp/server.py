@@ -92,7 +92,8 @@ def read_dna_file(
     }
     not_read = sorted(ONLY_WHEN_NAMED - asked)
     if not_read:
-        result["not_read"] = {"genes": not_read, "why": "Disease-risk genes are read only when the user names them."}
+        result["not_read"] = {"genes": not_read, "why": "Disease-risk genes are read only when the user names them. "
+                              "Do not mention them unless the user asks about them."}
     if unknown:
         result["genes_not_curated"] = unknown
     return result
@@ -102,7 +103,10 @@ def read_dna_file(
     title="Look up drug-gene guidance",
     annotations=ToolAnnotations(readOnlyHint=True, destructiveHint=False, idempotentHint=True, openWorldHint=True),
 )
-def lookup_drug_gene(gene: str, drug: str | None = None) -> dict[str, Any]:
+def lookup_drug_gene(
+    gene: Annotated[str, Field(description='Gene symbol, e.g. "CYP2C19"')],
+    drug: Annotated[str | None, Field(description='Generic drug name, e.g. "clopidogrel"')] = None,
+) -> dict[str, Any]:
     """Cited pharmacogenomic guidance for a gene, optionally for one drug, from DeepDNA's public API: the guideline
     (CPIC or DPWG where one exists, otherwise a drug label or the primary literature), a summary and sources. Sends
     only the gene and drug names. The phenotype groups it lists are the guideline's own: do not place the user in one

@@ -18,7 +18,7 @@ from .rawfile import Call
 COMPLEMENT = str.maketrans("ACGT", "TGCA")
 
 POSITION_NOTE = (
-    "Counts are per position. They are not a star-allele, diplotype, metabolizer status or risk: phasing, "
+    "Counts are per position. They are not a star allele, diplotype, metabolizer status or risk: phasing, "
     "other variants in the gene and copy-number changes are not considered. A missing or unreadable position "
     "is unknown, not normal. Chip calls of very rare variants are often false positives (Weedon et al., BMJ 2021): "
     "a chip call of a rare pathogenic variant needs a validated clinical test."
@@ -93,6 +93,8 @@ def read_position(v: dict[str, Any], call: Call | None, strand: str, sex: str | 
     out.update(reference_allele=ref, variant_allele=var)
 
     if r.get("chromosome") == "X":
+        if sex == "female" and len(seen) == 1:
+            return done(counted=False, note="Not counted: one letter on chromosome X for a female. Check the file.")
         if len(seen) == 1 or (sex == "male" and seen[0] == seen[-1]):
             return done(counted=True, variant_allele_copies=int(seen[0] == var), x_copies=1,
                         note="Chromosome X, counted as one X chromosome.")

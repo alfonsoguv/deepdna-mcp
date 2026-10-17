@@ -1,7 +1,7 @@
 """Read a consumer raw DNA file on this computer.
 
-Nothing in this module touches the network. Only the rsIDs asked for are kept
-in memory, and nothing is written to disk.
+Nothing in this module touches the network or writes to disk. The file's text is
+held in memory only while it is parsed; after that only the rsIDs asked for are kept.
 """
 
 from __future__ import annotations

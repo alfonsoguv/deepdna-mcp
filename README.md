@@ -23,7 +23,7 @@ Streamable HTTP, stateless, no API key, no account. Listed in the official MCP r
 
 Two prompts, `medication_review` and `explain_variant`, package the common questions for clients that show MCP prompts.
 
-Coverage today is 12 genes: CYP2C19, CYP2C9, CYP2D6, SLCO1B1, VKORC1, UGT1A1, G6PD, MTHFR, COMT, HFE, APOE and BRCA1, with 51 curated drug–gene pairs across 11 of them: 40 cite a CPIC or DPWG guideline, the rest a drug label or the primary literature; the `basis` field in `check_medications` says which (`guideline` is null when no guideline exists). It is a small, reviewed set, not a mirror of PharmGKB/ClinPGx. Every record lists its sources. The `level` field (the guideline's evidence grade) is `null` for every pair today.
+Coverage today is 12 genes: CYP2C19, CYP2C9, CYP2D6, SLCO1B1, VKORC1, UGT1A1, G6PD, MTHFR, COMT, HFE, APOE and BRCA1, with 51 curated drug–gene pairs across 11 of them: 40 cite a CPIC or DPWG guideline, the rest a drug label or the primary literature; the `basis` field in `check_medications` says which (`guideline` is null, or "drug label", when no guideline exists). It is a small, reviewed set, not a mirror of PharmGKB/ClinPGx. Every record lists its sources. The `level` field (the guideline's evidence grade) is `null` for every pair today.
 
 ## Connect
 
@@ -97,14 +97,14 @@ Clients that use an `mcpServers` file (if the client cannot find `uvx`, put its 
 | `lookup_drug_gene` | Guidance for a gene, optionally for one drug, from the public API. Sends only the gene and drug names |
 
 - Each position gets one of four states: `read`, `no_call`, `not_in_file`, or `unexpected_letters` (letters that fit neither the record nor its complement). A missing or unreadable position is unknown, never normal.
-- For positions the record marks as `countable` (one chip call is enough to read them), it gives how many copies of the variant allele the file shows, with the record's text and sources.
-- `genes` limits the answer to what the user asked about. APOE, BRCA1 and HFE are disease-risk genes: they are read only when named in `genes`.
+- For positions the record marks as `countable` (no phasing or other variants are needed to read them), it gives how many copies of the variant allele the file shows, with the record's text and sources.
+- `genes` limits the answer to what the user asked about. APOE, BRCA1 and HFE are disease-risk genes: they are read only when named in `genes`, so the user chooses what to learn.
 - `sex` is needed only for some chromosome X positions (G6PD).
 - It checks the file's strand first: at least three positions that are not A/T or C/G must agree, and none disagree. A/T and C/G positions, whose two letters look the same on either strand, are counted only on a confirmed strand.
 
 A count at one position is not a metabolizer status, a diplotype, a diagnosis or a dose. The tools tell the model never to suggest starting, stopping or changing a medication: that stays with the prescriber. VCF files are not supported.
 
-Try it with: *"My 23andMe file is at /Users/me/Downloads/genome.txt. What does it show at the CYP2C19 positions DeepDNA curates, and what do the sources say about clopidogrel?"*
+Try it with: *"My 23andMe file is at /Users/me/Downloads/genome.txt. What does it show at the CYP2C19 positions DeepDNA curates, and what do the sources say about clopidogrel?"* (on Windows, a path such as `C:\Users\me\Downloads\genome.txt`).
 
 ## What it is not
 

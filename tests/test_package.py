@@ -62,7 +62,7 @@ def test_23andme_plus_strand_counts_only_what_a_position_can_say(tmp_path):
     assert "conversation" in res["privacy"] and res["source"].endswith("https://deepdna.ai/docs/")
     # Disease-risk genes are neither read nor reported unless named.
     assert not {"HFE", "BRCA1"} & {p["gene"] for p in res["positions"]}
-    assert res["not_read"]["genes"] == ["APOE", "BRCA1", "HFE"]
+    assert res["not_read"]["genes"] == ["APOE", "BRCA1", "HFE"] and "Do not mention" in res["not_read"]["why"]
     named = by_rsid(server.read_dna_file(str(write_23andme(tmp_path, ROWS_PLUS)), genes=["HFE", "BRCA1"]))
     assert named["rs1799945"]["counted"] is True and named["rs1799945"]["variant_allele_copies"] == 1  # strand confirmed plus
     assert named["rs28897672"]["state"] == "no_call" and "not normal" in named["rs28897672"]["note"]
@@ -134,6 +134,19 @@ def test_x_with_two_different_letters_and_no_sex_says_how_it_was_counted(tmp_pat
     rows[5] = ("rs1050828", "X", "153764217", "CT")
     pos = by_rsid(server.read_dna_file(str(write_23andme(tmp_path, rows)), genes=["G6PD"]))["rs1050828"]
     assert pos["x_copies"] == 2 and "sex not given" in pos["note"]
+
+
+def test_x_single_letter_for_a_female_is_not_counted(tmp_path):
+    pos = by_rsid(server.read_dna_file(str(write_23andme(tmp_path, ROWS_PLUS)), genes=["G6PD"], sex="female"))["rs1050828"]
+    assert pos["counted"] is False and "Check the file" in pos["note"]
+
+
+def test_drug_gene_path_cannot_leave_the_pgx_route(monkeypatch):
+    from deepdna_mcp import knowledge
+    seen = []
+    monkeypatch.setattr(knowledge, "_get", lambda client, path: seen.append(path) or {})
+    knowledge.drug_gene("../../genes", "a/b")
+    assert seen == ["/pgx/..%2F..%2FGENES/a%2Fb"]
 
 
 def test_lookup_drug_gene_errors_name_the_curated_genes(monkeypatch):
