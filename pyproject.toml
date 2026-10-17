@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "Local MCP server that reads a raw DNA file on your computer and reports what it shows at the variants DeepDNA curates, with cited records. Nothing from the file is sent to deepdna.ai."
 readme = "README.md"
 requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
 dependencies = ["mcp>=2.3,<3", "httpx>=0.27"]
 keywords = ["mcp", "pharmacogenomics", "23andme", "dna", "ai-agents"]
 
