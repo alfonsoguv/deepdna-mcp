@@ -1,0 +1,28 @@
+[project]
+name = "deepdna-mcp"
+version = "0.1.0"
+description = "Local MCP server that reads a raw DNA file on your computer and reports what it shows at the variants DeepDNA curates, with cited records. Nothing from the file is sent to deepdna.ai."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = ["mcp>=2.3,<3", "httpx>=0.27"]
+keywords = ["mcp", "pharmacogenomics", "23andme", "dna", "ai-agents"]
+
+[project.urls]
+Homepage = "https://deepdna.ai/docs/#mcp"
+Repository = "https://github.com/alfonsoguv/deepdna-mcp"
+
+[project.scripts]
+deepdna-mcp = "deepdna_mcp.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/deepdna_mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
