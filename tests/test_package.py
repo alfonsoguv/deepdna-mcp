@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from deepdna_mcp import server
+from deepdna_mcp import rawfile, server
 from deepdna_mcp.rawfile import UnsupportedFile, read_raw_file
 from deepdna_mcp.reading import file_orientation, read_position
 
@@ -44,6 +44,7 @@ def by_rsid(result):
 @pytest.fixture(autouse=True)
 def offline(monkeypatch):
     monkeypatch.setattr(server, "curated_variants", lambda: (FIXTURE, "Educational information only."))
+    monkeypatch.setattr(server, "curated_genes", lambda: sorted({v["gene"] for v in FIXTURE}))
 
 
 def test_23andme_plus_strand_counts_only_what_a_position_can_say(tmp_path):
@@ -55,12 +56,17 @@ def test_23andme_plus_strand_counts_only_what_a_position_can_say(tmp_path):
     assert pos["rs4986893"]["variant_allele_copies"] == 0
     assert pos["rs12248560"]["variant_allele_copies"] == 1
     assert pos["rs1801133"]["variant_allele_copies"] == 1
-    assert pos["rs1799945"]["counted"] is True and pos["rs1799945"]["variant_allele_copies"] == 1  # strand confirmed plus
     assert pos["rs1050828"]["variant_allele_copies"] == 1 and pos["rs1050828"]["x_copies"] == 1
     assert pos["rs1065852"]["counted"] is False
-    assert pos["rs28897672"]["state"] == "no_call" and "not normal" in pos["rs28897672"]["note"]
-    assert pos["rs80357914"]["state"] == "not_in_file" and "not normal" in pos["rs80357914"]["note"]
     assert "metabolizer" in res["note"] and res["privacy"].startswith("Read on this computer")
+    assert "conversation" in res["privacy"] and res["source"].endswith("https://deepdna.ai/docs/")
+    # Disease-risk genes are neither read nor reported unless named.
+    assert not {"HFE", "BRCA1"} & {p["gene"] for p in res["positions"]}
+    assert res["not_read"]["genes"] == ["APOE", "BRCA1", "HFE"]
+    named = by_rsid(server.read_dna_file(str(write_23andme(tmp_path, ROWS_PLUS)), genes=["HFE", "BRCA1"]))
+    assert named["rs1799945"]["counted"] is True and named["rs1799945"]["variant_allele_copies"] == 1  # strand confirmed plus
+    assert named["rs28897672"]["state"] == "no_call" and "not normal" in named["rs28897672"]["note"]
+    assert named["rs80357914"]["state"] == "not_in_file" and "not normal" in named["rs80357914"]["note"]
     # What the package itself writes never assigns a phenotype (the records' own text describes guideline groups).
     ours = " ".join([res["note"], res["privacy"]] + [p["note"] for p in res["positions"] if p.get("note")]).lower()
     for word in ("poor metabolizer", "intermediate metabolizer", "rapid metabolizer", "you are", "your phenotype", "normal function"):
@@ -75,7 +81,7 @@ def test_genes_filter_and_unknown_gene(tmp_path):
 
 def test_minus_strand_file_is_complemented_and_ambiguous_positions_follow_it(tmp_path):
     rows = [(r, c, p, g.translate(COMP) if g not in ("--",) else g) for r, c, p, g in ROWS_PLUS]
-    res = server.read_dna_file(str(write_23andme(tmp_path, rows)))
+    res = server.read_dna_file(str(write_23andme(tmp_path, rows)), genes=["CYP2C19", "HFE"])
     pos = by_rsid(res)
     assert res["file"]["orientation"]["strand"] == "minus"
     assert pos["rs4244285"]["variant_allele_copies"] == 1 and pos["rs4986893"]["variant_allele_copies"] == 0
@@ -84,7 +90,7 @@ def test_minus_strand_file_is_complemented_and_ambiguous_positions_follow_it(tmp
 
 def test_unconfirmed_strand_never_counts_a_palindrome(tmp_path):
     rows = [ROWS_PLUS[0], ROWS_PLUS[4]]  # one non-ambiguous position is not enough to confirm the strand
-    res = server.read_dna_file(str(write_23andme(tmp_path, rows)))
+    res = server.read_dna_file(str(write_23andme(tmp_path, rows)), genes=["HFE"])
     assert res["file"]["orientation"]["strand"] == "unconfirmed"
     assert by_rsid(res)["rs1799945"]["counted"] is False
 
@@ -92,8 +98,50 @@ def test_unconfirmed_strand_never_counts_a_palindrome(tmp_path):
 def test_letters_that_match_neither_strand_are_flagged(tmp_path):
     rows = list(ROWS_PLUS)
     rows[1] = ("rs4986893", "10", "96540410", "GT")  # fits neither G/A nor its complement C/T
-    pos = by_rsid(server.read_dna_file(str(write_23andme(tmp_path, rows))))
+    res = server.read_dna_file(str(write_23andme(tmp_path, rows)))
+    pos = by_rsid(res)
     assert pos["rs4986893"]["state"] == "unexpected_letters" and pos["rs4986893"]["counted"] is False
+    assert res["summary"]["unexpected_letters"] == 1
+
+
+def test_strand_ambiguous_letters_must_still_fit_the_record(tmp_path):
+    rows = list(ROWS_PLUS)
+    rows[4] = ("rs1799945", "6", "26091179", "AA")  # HFE H63D is C/G: A fits neither strand
+    pos = by_rsid(server.read_dna_file(str(write_23andme(tmp_path, rows)), genes=["HFE"]))
+    assert pos["rs1799945"]["state"] == "unexpected_letters" and pos["rs1799945"]["counted"] is False
+
+
+def test_tilde_path_is_expanded_and_missing_file_says_what_to_pass(tmp_path, monkeypatch):
+    monkeypatch.setenv("HOME", str(tmp_path))
+    write_23andme(tmp_path, ROWS_PLUS)
+    assert server.read_dna_file("~/genome.txt")["file"]["format"] == "23andMe"
+    with pytest.raises(Exception, match="full path"):
+        server.read_dna_file("~/nope.txt")
+
+
+def test_zip_larger_than_the_limit_once_unpacked_is_refused(tmp_path, monkeypatch):
+    monkeypatch.setattr(rawfile, "MAX_BYTES", 2000)
+    z = tmp_path / "big.zip"
+    with zipfile.ZipFile(z, "w", zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr("genome.txt", "rs1\t1\t1\tAA\n" * 1000)
+    assert z.stat().st_size < 2000
+    with pytest.raises(UnsupportedFile, match="300 MB"):
+        read_raw_file(str(z), WANTED)
+
+
+def test_x_with_two_different_letters_and_no_sex_says_how_it_was_counted(tmp_path):
+    rows = list(ROWS_PLUS)
+    rows[5] = ("rs1050828", "X", "153764217", "CT")
+    pos = by_rsid(server.read_dna_file(str(write_23andme(tmp_path, rows)), genes=["G6PD"]))["rs1050828"]
+    assert pos["x_copies"] == 2 and "sex not given" in pos["note"]
+
+
+def test_lookup_drug_gene_errors_name_the_curated_genes(monkeypatch):
+    monkeypatch.setattr(server, "drug_gene", lambda gene, drug: {})
+    with pytest.raises(Exception, match="not one of the genes DeepDNA curates: BRCA1, CYP2C19"):
+        server.lookup_drug_gene("TPMT")
+    with pytest.raises(Exception, match="no curated record for ibuprofen with CYP2C19"):
+        server.lookup_drug_gene("CYP2C19", "ibuprofen")
 
 
 def test_ancestry_x_needs_sex_when_letters_are_identical(tmp_path):
@@ -104,7 +152,7 @@ def test_ancestry_x_needs_sex_when_letters_are_identical(tmp_path):
     res = server.read_dna_file(str(p))
     assert res["file"]["format"] == "AncestryDNA"
     assert by_rsid(res)["rs1050828"]["counted"] is False and "Pass sex" in by_rsid(res)["rs1050828"]["note"]
-    assert by_rsid(res)["rs28897672"]["state"] == "no_call"
+    assert by_rsid(server.read_dna_file(str(p), genes=["BRCA1"]))["rs28897672"]["state"] == "no_call"  # "0" = no-call
     male = by_rsid(server.read_dna_file(str(p), sex="male"))["rs1050828"]
     assert male["counted"] is True and male["variant_allele_copies"] == 1 and male["x_copies"] == 1
     female = by_rsid(server.read_dna_file(str(p), sex="female"))["rs1050828"]
@@ -144,4 +192,6 @@ def test_tools_are_listed_with_read_only_annotations():
     tools = {t.name: t for t in asyncio.run(server.server.list_tools())}
     assert set(tools) == {"read_dna_file", "lookup_drug_gene"}
     assert set(tools["read_dna_file"].input_schema["properties"]) == {"path", "genes", "sex"}
+    assert "Full path" in tools["read_dna_file"].input_schema["properties"]["path"]["description"]
     assert tools["read_dna_file"].annotations.read_only_hint is True
+    assert tools["read_dna_file"].annotations.open_world_hint is True  # it downloads the public records

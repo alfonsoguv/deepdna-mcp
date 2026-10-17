@@ -43,18 +43,27 @@ def _genotype(value: str) -> str:
     return "" if g in NO_CALLS else g
 
 
+TOO_LARGE = "The file is larger than 300 MB; a raw DNA export is usually under 30 MB."
+
+
 def _text(path: str) -> str:
+    path = os.path.abspath(os.path.expanduser(path))
     if not os.path.isfile(path):
-        raise FileNotFoundError(f"No file at {path}")
+        raise FileNotFoundError(f"No file at {path}. Pass the full path to the file, for example /Users/name/Downloads/genome.txt.")
     if os.path.getsize(path) > MAX_BYTES:
-        raise UnsupportedFile("The file is larger than 300 MB; a raw DNA export is usually under 30 MB.")
+        raise UnsupportedFile(TOO_LARGE)
     if zipfile.is_zipfile(path):
         with zipfile.ZipFile(path) as z:
             names = [n for n in z.namelist() if n.lower().endswith((".txt", ".csv")) and not n.startswith("__MACOSX/")]
             if not names:
                 raise UnsupportedFile("The zip file has no .txt or .csv inside.")
+            if z.getinfo(names[0]).file_size > MAX_BYTES:
+                raise UnsupportedFile(TOO_LARGE)
             with z.open(names[0]) as f:
-                return f.read().decode("utf-8-sig", errors="replace")
+                data = f.read(MAX_BYTES + 1)  # the declared size can lie
+            if len(data) > MAX_BYTES:
+                raise UnsupportedFile(TOO_LARGE)
+            return data.decode("utf-8-sig", errors="replace")
     with open(path, encoding="utf-8-sig", errors="replace") as f:
         return f.read()
 
@@ -63,7 +72,7 @@ def read_raw_file(path: str, wanted: set[str]) -> RawFile:
     """Parse a 23andMe, AncestryDNA or MyHeritage/FamilyTreeDNA export, keeping only the rsIDs in `wanted`."""
     text = _text(path)
     if text.lstrip().startswith("##fileformat=VCF"):
-        raise UnsupportedFile("VCF files are not supported: this package reads consumer raw data exports (23andMe, AncestryDNA, MyHeritage).")
+        raise UnsupportedFile("VCF files are not supported: this package reads consumer raw data exports (23andMe, AncestryDNA, MyHeritage or FamilyTreeDNA).")
     lines = text.splitlines()
     first = next((l for l in lines if l.strip() and not l.startswith("#")), "")
     header = first.replace('"', "").replace(" ", "").lower()
@@ -106,7 +115,7 @@ def read_raw_file(path: str, wanted: set[str]) -> RawFile:
             if rsid in wanted:
                 calls[rsid] = Call(_chromosome(parts[1]), _genotype(parts[3]))
     else:
-        raise UnsupportedFile("Unrecognised file. Supported: 23andMe (.txt), AncestryDNA (.txt), MyHeritage or FamilyTreeDNA (.csv), or a .zip with one of them.")
+        raise UnsupportedFile("Unrecognized file. Supported: 23andMe (.txt), AncestryDNA (.txt), MyHeritage or FamilyTreeDNA (.csv), or a .zip with one of them.")
 
     if data_lines == 0:
         raise UnsupportedFile("The file has no genotype rows.")

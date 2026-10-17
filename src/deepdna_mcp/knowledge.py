@@ -27,7 +27,8 @@ def _get(client: httpx.Client, path: str) -> dict[str, Any]:
     try:
         r = client.get(API + path)
     except httpx.HTTPError as e:
-        raise KnowledgeUnavailable(f"Could not reach deepdna.ai ({e.__class__.__name__}).") from e
+        raise KnowledgeUnavailable("Could not reach deepdna.ai to download the public records. "
+                                   "Check the internet connection and try again.") from e
     if r.status_code == 404:
         return {}
     if r.status_code != 200:
@@ -40,10 +41,17 @@ def _client() -> httpx.Client:
 
 
 @lru_cache(maxsize=1)
+def curated_genes() -> list[str]:
+    """The gene symbols DeepDNA curates. Fetched once per session."""
+    with _client() as client:
+        return [g["symbol"] for g in _get(client, "/genes").get("genes", [])]
+
+
+@lru_cache(maxsize=1)
 def curated_variants() -> tuple[list[dict[str, Any]], str]:
     """Every curated variant with its reading block, and the API's disclaimer. Fetched once per session."""
+    genes = curated_genes()
     with _client() as client:
-        genes = [g["symbol"] for g in _get(client, "/genes").get("genes", [])]
         with ThreadPoolExecutor(max_workers=6) as pool:
             gene_records = list(pool.map(lambda s: _get(client, f"/genes/{quote(s)}"), genes))
             rsids = sorted({k["rsid"] for g in gene_records for k in g.get("gene", {}).get("key_variants", []) if k.get("rsid")})
