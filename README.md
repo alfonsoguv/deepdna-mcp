@@ -16,7 +16,7 @@ Streamable HTTP, stateless, no API key, no account. Listed in the official MCP r
 |---|---|
 | `list_genes` | The genes in the knowledge base, with a one-line summary and category for each |
 | `lookup_gene` | Everything curated about one gene: function, key variants with rsIDs, phenotypes, drug interactions, what a consumer genotyping array can and cannot tell you, and sources |
-| `lookup_variant` | One variant by dbSNP rsID: gene, star-allele or common name, alleles, functional effect, population frequency note and sources. Optionally takes the genotype at that position and counts copies of the variant allele; it never turns that into a phenotype, metabolizer status or risk, and the genotype is not stored |
+| `lookup_variant` | One variant by dbSNP rsID: gene, star-allele or common name, alleles, functional effect, population frequency note and sources, plus a `reading` block with the reference and variant alleles on the plus strand of GRCh37 (as 23andMe raw data reports it), the gene's strand, and whether the position can be read on its own (`countable`) or is strand-ambiguous. It takes the rsID only, never a genotype: an agent that reads a raw DNA file compares it with `reading` itself, outside DeepDNA |
 | `lookup_drug_gene` | Guidance for a gene, optionally for one drug: guideline (CPIC or DPWG where one exists), summary, phenotype groups and sources |
 | `check_medications` | Splits a list of generic drug names into drugs with a curated record (gene, and a `basis` field: CPIC or DPWG guideline, drug label, or primary literature) and drugs not covered. Needs no genotype |
 | `request_beta_access` | The only tool that writes: registers the user's interest in the private beta (email and optional use case). The agent must ask the user first and set `user_consent: true`. See the [privacy policy](https://deepdna.ai/privacy/) |
@@ -73,9 +73,9 @@ GET https://deepdna.ai/api/v1/variants/rs4244285
 
 ## What it is not
 
-- **It does not read DNA files.** Parsing consumer raw data (23andMe, AncestryDNA, MyHeritage) is specified in the API but is in private beta and not deployed. A lookup carries a gene symbol, an rsID, a drug name or one genotype.
+- **It does not read DNA files.** Parsing consumer raw data (23andMe, AncestryDNA, MyHeritage) is specified in the API but is in private beta and not deployed. A lookup carries a gene symbol, an rsID or a drug name. The tools have no field for a genotype: an argument a tool does not declare, such as a genotype, is refused before its value is read.
 - **It does not call phenotypes or doses.** Turning a genotype into a metabolizer status needs phasing and the other variants in the gene, which a single lookup does not have. Tools such as PharmCAT do that from a VCF.
-- **Usage is counted, people are not.** Each request is counted (method, tool, the gene, rsID or drug looked up, whether there was an answer, the client's name and user-agent, a country code). IP addresses, request bodies, medication lists and genotypes are not stored; the one exception is `request_beta_access`, which keeps the email and use case the user agrees to send, and a hashed IP for one hour to limit abuse.
+- **Usage is counted, people are not.** Each request is counted (method, tool, the gene, rsID or drug looked up, whether there was an answer, the client's name and user-agent, a country code). IP addresses, request bodies and medication lists are not stored, and values shaped like a genotype are never stored or counted; the one exception is `request_beta_access`, which keeps the email and use case the user agrees to send, and a hashed IP for one hour to limit abuse.
 - **A consumer chip is not a clinical test.** Arrays are reliable for common variants and much less so for rare ones; anything that could affect a health decision needs a validated test and a clinician.
 
 ## Links
