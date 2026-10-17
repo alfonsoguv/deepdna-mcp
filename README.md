@@ -71,9 +71,38 @@ GET https://deepdna.ai/api/v1/pgx/CYP2C19/clopidogrel
 GET https://deepdna.ai/api/v1/variants/rs4244285
 ```
 
+## Read a raw DNA file on your own computer
+
+The remote server never sees a genotype. For a user's raw DNA file there is a local package in this repository. It reads the file on the user's computer and, for the variants DeepDNA curates, reports what the file shows at each position, with the cited records. The file is not uploaded anywhere. To read it, the package downloads from deepdna.ai the same public records for every user, so those requests carry nothing from the file; `lookup_drug_gene` sends only the gene and drug names it is given.
+
+**Claude Code** (needs [uv](https://docs.astral.sh/uv/)):
+
+```bash
+claude mcp add deepdna-local -- uvx --from git+https://github.com/alfonsoguv/deepdna-mcp deepdna-mcp
+```
+
+Clients that use an `mcpServers` file:
+
+```json
+{
+  "mcpServers": {
+    "deepdna-local": { "command": "uvx", "args": ["--from", "git+https://github.com/alfonsoguv/deepdna-mcp", "deepdna-mcp"] }
+  }
+}
+```
+
+| Tool | What it returns |
+|---|---|
+| `read_dna_file` | Reads a 23andMe, AncestryDNA or MyHeritage/FamilyTreeDNA export (.txt, .csv or .zip). For each curated variant: read, no-call or not in the file; for positions that can be read on their own, how many copies of the variant allele; and the record's text and sources. `genes` narrows the answer; `sex` is needed only for some chromosome X positions (G6PD) |
+| `lookup_drug_gene` | Guidance for a gene, optionally for one drug, from the public API. Sends only the gene and drug names |
+
+Before counting, it checks the file's strand on the positions where that can be told, and counts A/T and C/G positions only when the strand is confirmed. A position missing from the file, or one the chip could not read, is reported as unknown, never as normal. A count at one position is not a metabolizer status, a diplotype, a diagnosis or a dose. VCF files are not supported.
+
+Try it with: *"I've been prescribed clopidogrel. My 23andMe file is at ~/Downloads/genome.txt. Does my genetics matter for it?"*
+
 ## What it is not
 
-- **It does not read DNA files.** Parsing consumer raw data (23andMe, AncestryDNA, MyHeritage) is specified in the API but is in private beta and not deployed. A lookup carries a gene symbol, an rsID or a drug name. The tools have no field for a genotype: an argument a tool does not declare, such as a genotype, is refused and not used. An agent that reads a raw DNA file compares the user's genotype with the `reading` block itself, outside DeepDNA. The `reading` block gives the reference and variant alleles on the plus strand of GRCh37, as 23andMe raw data reports it.
+- **The remote server does not read DNA files.** The local package above reads them on the user's computer; parsing on DeepDNA's servers is specified in the API but is in private beta and not deployed. A lookup carries a gene symbol, an rsID or a drug name. The tools have no field for a genotype: an argument a tool does not declare, such as a genotype, is refused and not used. An agent that reads a raw DNA file compares the user's genotype with the `reading` block itself, outside DeepDNA. The `reading` block gives the reference and variant alleles on the plus strand of GRCh37, as 23andMe raw data reports it.
 - **It does not call phenotypes or doses.** Turning a genotype into a metabolizer status needs phasing and the other variants in the gene, which a single lookup does not have. Tools such as PharmCAT do that from a VCF.
 - **Usage is counted, people are not.** Each request is counted (method, tool, the lookup label described below, whether there was an answer, the client's name and version, its user-agent, a country code). IP addresses, request bodies and medication lists are not stored. A value typed into a declared field is recorded only as a short lookup label: an rsID in the form rs123, a gene from a fixed list of known pharmacogenes, or a drug DeepDNA covers; anything else, whatever it is, is recorded as "(other)". Please don't type a personal genetic result into these fields. The one exception is `request_beta_access`: it keeps the email and use case the user agrees to send, the signup metadata listed in the [privacy policy](https://deepdna.ai/privacy/) (time, source, country code and the client's name), and a hashed IP for one hour to limit abuse.
 - **A consumer chip is not a clinical test.** Arrays are reliable for common variants and much less so for rare ones; anything that could affect a health decision needs a validated test and a clinician.
@@ -85,6 +114,6 @@ GET https://deepdna.ai/api/v1/variants/rs4244285
 - Worked example in Python, where your own code goes from a raw DNA file to CPIC phenotypes (the server does not do this step): <https://deepdna.ai/blog/pharmacogenomics-raw-dna-python/>
 - Terms: <https://deepdna.ai/terms/> · Privacy: <https://deepdna.ai/privacy/>
 
-This repository holds documentation and examples only; the server is hosted by DeepDNA. Issues and questions about the tools are welcome here.
+This repository holds the documentation and the local package; the remote server is hosted by DeepDNA. Issues and questions about the tools are welcome here.
 
 <sub>Written with AI assistance.</sub>

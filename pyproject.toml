@@ -1,0 +1,26 @@
+[project]
+name = "deepdna-mcp"
+version = "0.1.0"
+description = "Pharmacogenomics MCP server that reads a raw DNA file on your computer and looks up cited records by rsID. The file never leaves your machine."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["mcp>=2.3,<3", "httpx>=0.27"]
+keywords = ["mcp", "pharmacogenomics", "23andme", "dna", "ai-agents"]
+
+[project.urls]
+Homepage = "https://deepdna.ai/docs/#mcp"
+Repository = "https://github.com/alfonsoguv/deepdna-mcp"
+
+[project.scripts]
+deepdna-mcp = "deepdna_mcp.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/deepdna_mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

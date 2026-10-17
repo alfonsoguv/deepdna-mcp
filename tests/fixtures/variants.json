@@ -1,0 +1,344 @@
+[
+ {
+  "rsid": "rs1801133",
+  "gene": "MTHFR",
+  "name": "C677T (Ala222Val, exon 4)",
+  "alleles": "Plus strand, GRCh37 (as in 23andMe raw data): G reference, A variant. MTHFR is on the minus strand, so A here is the T of c.665C>T, known as C677T.",
+  "effect": "Reduces enzyme thermostability. 677TT homozygotes have ~30% of normal MTHFR activity; 677CT heterozygotes ~65% (lymphocyte extracts, Frosst et al., Nat Genet 1995). ClinVar (VCV000003520): aggregate classification drug response (methotrexate toxicity), reviewed by an expert panel; a DPWG review found insufficient evidence for an MTHFR–methotrexate gene–drug interaction (van der Pol et al., Eur J Hum Genet 2024). Submissions for individual conditions conflict.",
+  "frequency_note": "677T allele (A on the plus strand) ~37% in Europeans, ~47% in Admixed Americans, ~9% in Africans (1000 Genomes, Ensembl).",
+  "sources": [
+   {
+    "label": "ClinVar — MTHFR gene entries",
+    "url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=MTHFR%5Bgene%5D"
+   },
+   {
+    "label": "Frosst et al., Nat Genet 1995",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/7647779/"
+   },
+   {
+    "label": "ClinVar VCV000003520",
+    "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/3520/"
+   },
+   {
+    "label": "van der Pol et al., Eur J Hum Genet 2024 (DPWG)",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/36056234/"
+   }
+  ],
+  "reading": {
+   "assembly": "GRCh37",
+   "chromosome": "1",
+   "position": 11856378,
+   "reference_allele": "G",
+   "variant_allele": "A",
+   "gene_strand": "minus",
+   "countable": true,
+   "strand_ambiguous": false,
+   "sources": [
+    {
+     "label": "dbSNP rs1801133",
+     "url": "https://www.ncbi.nlm.nih.gov/snp/rs1801133"
+    },
+    {
+     "label": "Ensembl GRCh37 rs1801133",
+     "url": "https://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=rs1801133"
+    }
+   ]
+  }
+ },
+ {
+  "rsid": "rs1065852",
+  "gene": "CYP2D6",
+  "name": "*10 (100C>T)",
+  "alleles": "Plus strand, GRCh37 (as in 23andMe raw data): G reference, A variant. CYP2D6 is on the minus strand, so A here is the T of c.100C>T (Pro34Ser). A is carried by *10 and by many other alleles, *4 among them, so it can't be read as *10 on its own: read it together with rs3892097.",
+  "effect": "Decreased function; activity value 0.25.",
+  "frequency_note": "~40% in East Asians, where it is the dominant intermediate-activity variant. Rare in Europeans.",
+  "sources": [
+   {
+    "label": "CPIC — CYP2D6 gene page",
+    "url": "https://cpicpgx.org/gene/cyp2d6/"
+   },
+   {
+    "label": "PharmVar CYP2D6",
+    "url": "https://www.pharmvar.org/gene/CYP2D6"
+   }
+  ],
+  "reading": {
+   "assembly": "GRCh37",
+   "chromosome": "22",
+   "position": 42526694,
+   "reference_allele": "G",
+   "variant_allele": "A",
+   "gene_strand": "minus",
+   "countable": false,
+   "strand_ambiguous": false,
+   "sources": [
+    {
+     "label": "dbSNP rs1065852",
+     "url": "https://www.ncbi.nlm.nih.gov/snp/rs1065852"
+    },
+    {
+     "label": "Ensembl GRCh37 rs1065852",
+     "url": "https://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=rs1065852"
+    }
+   ]
+  }
+ },
+ {
+  "rsid": "rs4244285",
+  "gene": "CYP2C19",
+  "name": "*2 (c.681G>A)",
+  "alleles": "Plus strand, GRCh37 (as in 23andMe raw data): G reference, A variant, which defines *2. CYP2C19 is on the plus strand, so the letters match the gene. Copies of A at this one position are not a metabolizer status: that needs the other CYP2C19 variants and phasing.",
+  "effect": "Splice defect, no functional enzyme; the most common CYP2C19 loss-of-function allele worldwide. Poor and intermediate metabolizers form less active clopidogrel.",
+  "frequency_note": "~15% in Europeans, ~17% in Africans, ~29–35% in East Asians.",
+  "sources": [
+   {
+    "label": "CPIC — CYP2C19 gene page",
+    "url": "https://cpicpgx.org/gene/cyp2c19/"
+   },
+   {
+    "label": "PharmVar CYP2C19",
+    "url": "https://www.pharmvar.org/gene/CYP2C19"
+   }
+  ],
+  "reading": {
+   "assembly": "GRCh37",
+   "chromosome": "10",
+   "position": 96541616,
+   "reference_allele": "G",
+   "variant_allele": "A",
+   "gene_strand": "plus",
+   "countable": true,
+   "strand_ambiguous": false,
+   "sources": [
+    {
+     "label": "dbSNP rs4244285",
+     "url": "https://www.ncbi.nlm.nih.gov/snp/rs4244285"
+    },
+    {
+     "label": "Ensembl GRCh37 rs4244285",
+     "url": "https://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=rs4244285"
+    }
+   ]
+  }
+ },
+ {
+  "rsid": "rs4986893",
+  "gene": "CYP2C19",
+  "name": "*3 (c.636G>A)",
+  "alleles": "Plus strand, GRCh37 (as in 23andMe raw data): G reference, A variant (Trp212Ter), which defines *3.",
+  "effect": "Premature stop codon, no functional enzyme.",
+  "frequency_note": "Rare in Europeans (<1%), common in East Asians (~5–9%).",
+  "sources": [
+   {
+    "label": "CPIC — CYP2C19 gene page",
+    "url": "https://cpicpgx.org/gene/cyp2c19/"
+   },
+   {
+    "label": "PharmVar CYP2C19",
+    "url": "https://www.pharmvar.org/gene/CYP2C19"
+   }
+  ],
+  "reading": {
+   "assembly": "GRCh37",
+   "chromosome": "10",
+   "position": 96540410,
+   "reference_allele": "G",
+   "variant_allele": "A",
+   "gene_strand": "plus",
+   "countable": true,
+   "strand_ambiguous": false,
+   "sources": [
+    {
+     "label": "dbSNP rs4986893",
+     "url": "https://www.ncbi.nlm.nih.gov/snp/rs4986893"
+    },
+    {
+     "label": "Ensembl GRCh37 rs4986893",
+     "url": "https://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=rs4986893"
+    }
+   ]
+  }
+ },
+ {
+  "rsid": "rs12248560",
+  "gene": "CYP2C19",
+  "name": "*17 (c.-806C>T)",
+  "alleles": "Plus strand, GRCh37 (as in 23andMe raw data): C reference, T variant (c.-806C>T), found in *17.",
+  "effect": "Promoter variant that boosts transcription and raises enzyme activity; drives rapid (*1/*17) and ultra-rapid (*17/*17) metabolizer phenotypes.",
+  "frequency_note": "~21% in Europeans, ~16% in Africans, ~3% in East Asians.",
+  "sources": [
+   {
+    "label": "CPIC — CYP2C19 gene page",
+    "url": "https://cpicpgx.org/gene/cyp2c19/"
+   },
+   {
+    "label": "PharmVar CYP2C19",
+    "url": "https://www.pharmvar.org/gene/CYP2C19"
+   }
+  ],
+  "reading": {
+   "assembly": "GRCh37",
+   "chromosome": "10",
+   "position": 96521657,
+   "reference_allele": "C",
+   "variant_allele": "T",
+   "gene_strand": "plus",
+   "countable": true,
+   "strand_ambiguous": false,
+   "sources": [
+    {
+     "label": "dbSNP rs12248560",
+     "url": "https://www.ncbi.nlm.nih.gov/snp/rs12248560"
+    },
+    {
+     "label": "Ensembl GRCh37 rs12248560",
+     "url": "https://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=rs12248560"
+    }
+   ]
+  }
+ },
+ {
+  "rsid": "rs1050828",
+  "gene": "G6PD",
+  "name": "G6PD A- (component 1 of 2)",
+  "alleles": "Plus strand, GRCh37 (as in 23andMe raw data): C reference, T variant. G6PD is on the minus strand, so T here is the A of c.202G>A (Val68Met), the change that makes G6PD A- together with c.376A>G (rs1050829). G6PD is on the X chromosome: counting needs the person's sex.",
+  "effect": "Together with rs1050829 defines the G6PD A- allele: moderately reduced activity, milder than Mediterranean; hemolysis often self-limiting but drug and infection triggers still matter.",
+  "frequency_note": "The common African-ancestry variant.",
+  "sources": [
+   {
+    "label": "CPIC — G6PD gene page",
+    "url": "https://cpicpgx.org/gene/g6pd/"
+   }
+  ],
+  "reading": {
+   "assembly": "GRCh37",
+   "chromosome": "X",
+   "position": 153764217,
+   "reference_allele": "C",
+   "variant_allele": "T",
+   "gene_strand": "minus",
+   "countable": true,
+   "strand_ambiguous": false,
+   "sources": [
+    {
+     "label": "dbSNP rs1050828",
+     "url": "https://www.ncbi.nlm.nih.gov/snp/rs1050828"
+    },
+    {
+     "label": "Ensembl GRCh37 rs1050828",
+     "url": "https://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=rs1050828"
+    }
+   ]
+  }
+ },
+ {
+  "rsid": "rs1799945",
+  "gene": "HFE",
+  "name": "H63D (p.His63Asp)",
+  "alleles": "Plus strand, GRCh37 (as in 23andMe raw data): C reference, G variant (His63Asp, H63D). Strand-ambiguous (C/G): the letters are the same on both strands, so you can't tell which strand a file uses, and a homozygote on the other strand reads as the other allele.",
+  "effect": "Much milder than C282Y. H63D/H63D alone does not cause clinically meaningful iron overload; matters mainly as a compound heterozygote with C282Y.",
+  "frequency_note": "Far more common worldwide than C282Y.",
+  "sources": [
+   {
+    "label": "GeneReviews — HFE Hemochromatosis",
+    "url": "https://www.ncbi.nlm.nih.gov/books/NBK1440/"
+   },
+   {
+    "label": "MedlinePlus — HFE gene",
+    "url": "https://medlineplus.gov/genetics/gene/hfe/"
+   }
+  ],
+  "reading": {
+   "assembly": "GRCh37",
+   "chromosome": "6",
+   "position": 26091179,
+   "reference_allele": "C",
+   "variant_allele": "G",
+   "gene_strand": "plus",
+   "countable": true,
+   "strand_ambiguous": true,
+   "sources": [
+    {
+     "label": "dbSNP rs1799945",
+     "url": "https://www.ncbi.nlm.nih.gov/snp/rs1799945"
+    },
+    {
+     "label": "Ensembl GRCh37 rs1799945",
+     "url": "https://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=rs1799945"
+    }
+   ]
+  }
+ },
+ {
+  "rsid": "rs80357914",
+  "gene": "BRCA1",
+  "name": "185delAG (c.68_69delAG)",
+  "alleles": "An insertion-deletion site, not a single letter: this rsID covers both a two-base deletion (c.68_69del, known as 185delAG) and a duplication at the same place, and consumer files report insertions and deletions in their own notation. It can't be counted from an rsID lookup.",
+  "effect": "Frameshift that truncates the protein early. ClinVar: Pathogenic. Reported by some consumer services as part of the Ashkenazi founder panel.",
+  "frequency_note": "Ashkenazi Jewish founder variant; ~1% carrier frequency in that population, far rarer elsewhere.",
+  "sources": [
+   {
+    "label": "ClinVar — BRCA1 entries",
+    "url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=BRCA1%5Bgene%5D"
+   }
+  ],
+  "reading": {
+   "assembly": "GRCh37",
+   "chromosome": "17",
+   "position": 41276045,
+   "reference_allele": null,
+   "variant_allele": null,
+   "gene_strand": "minus",
+   "countable": false,
+   "strand_ambiguous": false,
+   "sources": [
+    {
+     "label": "dbSNP rs80357914",
+     "url": "https://www.ncbi.nlm.nih.gov/snp/rs80357914"
+    },
+    {
+     "label": "Ensembl GRCh37 rs80357914",
+     "url": "https://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=rs80357914"
+    }
+   ]
+  }
+ },
+ {
+  "rsid": "rs28897672",
+  "gene": "BRCA1",
+  "name": "C61G (c.181T>G)",
+  "alleles": "Plus strand, GRCh37 (as in 23andMe raw data): A reference, C variant. BRCA1 is on the minus strand, so C here is the G of c.181T>G (Cys61Gly).",
+  "effect": "Missense disrupting the RING domain; abolishes E3 ligase activity. ClinVar: Pathogenic. SNP chips like those consumer tests use are unreliable for rare pathogenic variants: on the research arrays used in UK Biobank, only 4.2% of positive BRCA1/BRCA2 chip calls were confirmed by sequencing (Weedon et al., BMJ 2021), so a chip result needs a validated clinical test.",
+  "frequency_note": "Polish founder variant.",
+  "sources": [
+   {
+    "label": "ClinVar — BRCA1 entries",
+    "url": "https://www.ncbi.nlm.nih.gov/clinvar/?term=BRCA1%5Bgene%5D"
+   },
+   {
+    "label": "Weedon et al., BMJ 2021 (SNP chips and rare pathogenic variants)",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/33589468/"
+   }
+  ],
+  "reading": {
+   "assembly": "GRCh37",
+   "chromosome": "17",
+   "position": 41258504,
+   "reference_allele": "A",
+   "variant_allele": "C",
+   "gene_strand": "minus",
+   "countable": true,
+   "strand_ambiguous": false,
+   "sources": [
+    {
+     "label": "dbSNP rs28897672",
+     "url": "https://www.ncbi.nlm.nih.gov/snp/rs28897672"
+    },
+    {
+     "label": "Ensembl GRCh37 rs28897672",
+     "url": "https://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=rs28897672"
+    }
+   ]
+  }
+ }
+]
