@@ -117,6 +117,7 @@ Try it with: *"My 23andMe file is at /Users/me/Downloads/genome.txt. What does i
 
 - Docs: <https://deepdna.ai/docs/#mcp>
 - Walkthrough with real outputs: <https://deepdna.ai/blog/pharmacogenomics-mcp-server/>
+- Reading a 23andMe file with Claude using the local package, step by step: <https://deepdna.ai/blog/read-23andme-file-with-claude/>
 - Worked example in Python, where your own code goes from a raw DNA file to CPIC phenotypes (neither server does this step): <https://deepdna.ai/blog/pharmacogenomics-raw-dna-python/>
 - Terms: <https://deepdna.ai/terms/> · Privacy: <https://deepdna.ai/privacy/>
 
