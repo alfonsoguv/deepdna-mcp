@@ -31,6 +31,8 @@ jobs:
         run: |
           version=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
           test "v$version" = "$GITHUB_REF_NAME" || { echo "tag $GITHUB_REF_NAME != version $version"; exit 1; }
+          python -c "import json,sys; s=json.load(open('server.json')); sys.exit(0 if s['version']==s['packages'][0]['version']=='$version' else 'server.json version != $version')"
+          grep -q "deepdna-mcp@$version" README.md || { echo "README does not install $version"; exit 1; }
       - run: pip install build && python -m build
       - uses: actions/upload-artifact@v4
         with:

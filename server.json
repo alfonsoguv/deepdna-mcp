@@ -1,0 +1,23 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "ai.deepdna/local",
+  "title": "DeepDNA local",
+  "description": "Reads a raw DNA file on your computer and reports the variants DeepDNA curates, with sources.",
+  "version": "0.1.1",
+  "websiteUrl": "https://github.com/alfonsoguv/deepdna-mcp",
+  "repository": {
+    "url": "https://github.com/alfonsoguv/deepdna-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "deepdna-mcp",
+      "version": "0.1.1",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
