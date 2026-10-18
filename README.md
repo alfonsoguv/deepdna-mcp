@@ -75,10 +75,10 @@ GET https://deepdna.ai/api/v1/variants/rs4244285
 
 The remote server takes no genotype: its tools have no field for one. For a raw DNA file there is a local package in this repository. It reads the file on the user's computer and reports what it shows at each position DeepDNA curates, with the cited records. Nothing from the file is sent to deepdna.ai: the package downloads the same public records for every user, and `lookup_drug_gene` sends only the gene and drug names. What `read_dna_file` returns (the letters and counts at the curated positions) becomes part of the conversation with the AI model your client uses, under that provider's terms.
 
-**Claude Code** (needs [uv](https://docs.astral.sh/uv/) and git):
+**Claude Code** (needs [uv](https://docs.astral.sh/uv/); the package is on [PyPI](https://pypi.org/project/deepdna-mcp/)):
 
 ```bash
-claude mcp add deepdna-local -- uvx --from git+https://github.com/alfonsoguv/deepdna-mcp@v0.1.0 deepdna-mcp
+claude mcp add deepdna-local -- uvx deepdna-mcp@0.1.1
 ```
 
 Clients that use an `mcpServers` file (if the client cannot find `uvx`, put its full path, from `which uvx`, in `command`):
@@ -86,7 +86,7 @@ Clients that use an `mcpServers` file (if the client cannot find `uvx`, put its 
 ```json
 {
   "mcpServers": {
-    "deepdna-local": { "command": "uvx", "args": ["--from", "git+https://github.com/alfonsoguv/deepdna-mcp@v0.1.0", "deepdna-mcp"] }
+    "deepdna-local": { "command": "uvx", "args": ["deepdna-mcp@0.1.1"] }
   }
 }
 ```
@@ -123,3 +123,5 @@ Try it with: *"My 23andMe file is at /Users/me/Downloads/genome.txt. What does i
 This repository holds the documentation and the local package; the remote server is hosted by DeepDNA. Questions and bug reports go in the issues; please don't post a raw DNA file, genotypes or medications there.
 
 <sub>Written with AI assistance.</sub>
+
+<!-- mcp-name: ai.deepdna/local -->
