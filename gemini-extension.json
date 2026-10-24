@@ -1,0 +1,10 @@
+{
+  "name": "deepdna",
+  "version": "1.3.0",
+  "description": "Cited pharmacogenomics: CPIC and DPWG drug–gene guidance, gene and rsID lookups, and a medication list screen. Read-only; takes no genotype or DNA file.",
+  "mcpServers": {
+    "deepdna": {
+      "httpUrl": "https://deepdna.ai/mcp"
+    }
+  }
+}
