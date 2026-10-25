@@ -56,6 +56,12 @@ claude mcp add --transport http deepdna https://deepdna.ai/mcp
 
 **Claude Desktop and claude.ai:** add `https://deepdna.ai/mcp` as a custom connector.
 
+**Gemini CLI** (installs the remote, read-only server `https://deepdna.ai/mcp` as an extension, not the local package; `gemini-extension.json` is in this repo):
+
+```bash
+gemini extensions install https://github.com/alfonsoguv/deepdna-mcp
+```
+
 ## Try it without a client
 
 ```bash
