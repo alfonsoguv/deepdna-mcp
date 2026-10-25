@@ -1,6 +1,6 @@
 # DeepDNA MCP server
 
-A remote [Model Context Protocol](https://modelcontextprotocol.io) server that gives AI agents cited pharmacogenomic and gene-variant lookups, so the model quotes CPIC and DPWG guidance instead of recalling it from memory. This repository also holds a [local package](#read-a-raw-dna-file-on-your-own-computer) that reads a raw DNA file on the user's own computer; nothing from the file is sent to DeepDNA.
+A remote [Model Context Protocol](https://modelcontextprotocol.io) server that gives AI agents cited pharmacogenomic and gene-variant lookups, so answers can quote CPIC and DPWG guidance and its sources. This repository also holds a [local package](#read-a-raw-dna-file-on-your-own-computer) that reads a raw DNA file on the user's own computer; nothing from the file is sent to DeepDNA, but what the package reports becomes part of the conversation with the AI model.
 
 ```text
 https://deepdna.ai/mcp
@@ -16,10 +16,11 @@ Streamable HTTP, stateless, no API key, no account. Listed in the official MCP r
 |---|---|
 | `list_genes` | The genes in the knowledge base, with a one-line summary and category for each |
 | `lookup_gene` | Everything curated about one gene: function, key variants with rsIDs, phenotypes, drug interactions, what a consumer genotyping array can and cannot tell you, and sources |
-| `lookup_variant` | One variant by dbSNP rsID: gene, star-allele or common name, alleles, effect, frequency note, sources, and a `reading` block (plus-strand GRCh37 alleles, `countable`, `strand_ambiguous`). Takes the rsID only, never a genotype |
+| `lookup_variant` | One variant by dbSNP rsID: gene, star-allele or common name, alleles on the plus strand of GRCh37, effect, frequency note and sources. Takes the rsID only, never a genotype |
 | `lookup_drug_gene` | Guidance for a gene, optionally for one drug: guideline (CPIC or DPWG where one exists), summary, phenotype groups and sources |
 | `check_medications` | Splits a list of generic drug names into drugs with a curated record (gene, and a `basis` field: CPIC or DPWG guideline, drug label, or primary literature) and drugs not covered. Needs no genotype |
-| `request_beta_access` | The only tool that writes: registers the user's interest in the private beta (email and optional use case). The agent must ask the user first and set `user_consent: true`. See the [privacy policy](https://deepdna.ai/privacy/) |
+
+All five tools are read-only.
 
 Two prompts, `medication_review` and `explain_variant`, package the common questions for clients that show MCP prompts.
 
@@ -81,6 +82,8 @@ The remote server takes no genotype: its tools have no field for one. For a raw 
 claude mcp add deepdna-local -- uvx deepdna-mcp@0.1.1
 ```
 
+The [`plugin/`](plugin/) folder packages the same command as a Claude plugin, for Claude Code and for Cowork sessions on the user's computer.
+
 Clients that use an `mcpServers` file (if the client cannot find `uvx`, put its full path, from `which uvx`, in `command`):
 
 ```json
@@ -108,9 +111,9 @@ Try it with: *"My 23andMe file is at /Users/me/Downloads/genome.txt. What does i
 
 ## What it is not
 
-- **The remote server does not read DNA files.** Parsing on DeepDNA's servers is specified in the API but is in private beta and not deployed. A remote lookup carries a gene symbol, an rsID or a drug name. Its tools have no genotype field, and an undeclared argument is refused and not used. An agent that reads a raw DNA file itself compares the user's genotype with the `reading` block, outside DeepDNA. The `reading` block gives the reference and variant alleles on the plus strand of GRCh37, as 23andMe raw data reports it.
+- **The remote server does not read DNA files.** Parsing on DeepDNA's servers is specified in the API but is in private beta and not deployed. A remote lookup carries a gene symbol, an rsID or a drug name. Its tools have no genotype field, and an undeclared argument is refused and not used. The alleles it reports are on the plus strand of GRCh37, as 23andMe raw data reports them.
 - **Neither server calls phenotypes or doses.** Turning a genotype into a metabolizer status needs phasing and the other variants in the gene, which a single lookup or a chip file does not give. Tools such as PharmCAT do that from a VCF.
-- **Remote usage is counted, people are not.** Each request to the remote server is counted (method, tool, the lookup label described below, whether there was an answer, the client's name and version, its user-agent, a country code). IP addresses, request bodies and medication lists are not stored. A value typed into a declared field is recorded only as a short lookup label: an rsID in the form rs123, a gene from a fixed list of known pharmacogenes, or a drug DeepDNA covers; anything else, whatever it is, is recorded as "(other)". Please don't type a personal genetic result into these fields. The one exception is `request_beta_access`: it keeps the email and use case the user agrees to send, the signup metadata listed in the [privacy policy](https://deepdna.ai/privacy/) (time, source, country code and the client's name), and a hashed IP for one hour to limit abuse. The local package's downloads are ordinary requests to the public API, with the user-agent `deepdna-mcp-local/<version>`.
+- **Remote usage is counted, people are not.** Each request to the remote server is counted (method, tool, the lookup label described below, whether there was an answer, the client's name and version, its user-agent, a country code). IP addresses, request bodies and medication lists are not stored. A value typed into a declared field is recorded only as a short lookup label: an rsID in the form rs123, a gene from a fixed list of known pharmacogenes, or a drug DeepDNA covers; anything else, whatever it is, is recorded as "(other)". Please don't type a personal genetic result into these fields. See the [privacy policy](https://deepdna.ai/privacy/). The local package's downloads are ordinary requests to the public API, with the user-agent `deepdna-mcp-local/<version>`.
 - **A consumer chip is not a clinical test.** Arrays are reliable for common variants and much less so for rare ones; anything that could affect a health decision needs a validated test and a clinician.
 
 ## Links

@@ -1,0 +1,11 @@
+{
+  "name": "deepdna-local",
+  "displayName": "DeepDNA local",
+  "version": "0.1.1",
+  "description": "Reads a raw DNA file (23andMe, AncestryDNA, MyHeritage) on your own computer and reports what it shows at the pharmacogenomic positions DeepDNA curates, with cited records. Educational information only, not medical advice.",
+  "author": { "name": "DeepDNA", "url": "https://deepdna.ai" },
+  "homepage": "https://deepdna.ai/docs/#mcp",
+  "repository": "https://github.com/alfonsoguv/deepdna-mcp",
+  "license": "MIT",
+  "keywords": ["pharmacogenomics", "dna", "23andme", "mcp"]
+}
