@@ -1,16 +1,18 @@
 # DeepDNA local
 
-Reads a raw DNA file on your own computer and reports what it shows at the pharmacogenomic positions DeepDNA curates, with the cited record for each one. It adds one local MCP server, `deepdna-local`, to Claude Code and to Cowork sessions that run on your computer. Chat on claude.ai does not start local servers; for chat, use the DeepDNA connector (`https://deepdna.ai/mcp`), which looks up genes, variants and drugs but never reads a DNA file.
+Reads a raw DNA file on your own computer and reports what it shows at the positions DeepDNA curates, with the cited record for each one. It adds one local MCP server, `deepdna-local`, to Claude Code and to Cowork sessions that run on your computer.
+
+Chat on claude.ai does not start local servers. For chat, add `https://deepdna.ai/mcp` as a custom connector: it looks up genes, variants and drugs, but never reads a DNA file.
 
 > Educational information only, not medical advice. A count at one position is not a metabolizer status, a diplotype, a diagnosis or a dose. Decisions about a medication stay with the prescriber, with a validated test.
 
 ## What it runs
 
-The plugin starts the open-source package [`deepdna-mcp`](https://pypi.org/project/deepdna-mcp/) 0.1.1 from PyPI with `uvx deepdna-mcp==0.1.1`. It needs [uv](https://docs.astral.sh/uv/) on your computer. The source is in this repository, under `src/deepdna_mcp/`, MIT licensed.
+The plugin starts the open-source package [`deepdna-mcp`](https://pypi.org/project/deepdna-mcp/) 0.1.1 from PyPI with `uvx deepdna-mcp==0.1.1`. It needs [uv](https://docs.astral.sh/uv/) on your computer; on first run, uv downloads that package and its dependencies from PyPI and keeps them in its own cache. The source is in this repository, under `src/deepdna_mcp/`, MIT licensed.
 
 ## Use it
 
-Ask Claude, for example: *"My 23andMe file is at /Users/me/Downloads/genome.txt. What does it show at the CYP2C19 positions DeepDNA curates, and what do the sources say about clopidogrel?"*
+Ask Claude, for example: *"My 23andMe file is at /Users/me/Downloads/genome.txt. What does it show at the CYP2C19 positions DeepDNA curates, and what do the sources say about clopidogrel?"* (on Windows, a path such as `C:\Users\me\Downloads\genome.txt`).
 
 | Tool | What it returns |
 |---|---|
@@ -24,12 +26,12 @@ Ask Claude, for example: *"My 23andMe file is at /Users/me/Downloads/genome.txt.
 
 ## Data
 
-- **Your DNA file stays on your computer.** The package reads it locally and sends nothing from it to DeepDNA or anyone else. It writes nothing to disk.
-- **What it fetches:** at the start of each session it downloads the same public records for every user from `https://deepdna.ai/api/v1` (the list of curated genes, each gene's record and each curated variant's record). `lookup_drug_gene` sends only a gene symbol and a drug name. These requests carry the user-agent `deepdna-mcp-local/0.1.1` and are counted like any other request to the public API, as the [privacy policy](https://deepdna.ai/privacy/) describes.
+- **The file is read on your computer.** The package sends nothing from the file to DeepDNA or anyone else, and writes nothing to disk. What it reports from the file does reach the AI model, as the last point says.
+- **What it fetches:** the first time a tool needs them in a session, it downloads the same public records for every user from `https://deepdna.ai/api/v1` (the list of curated genes, each gene's record and each curated variant's record) and keeps them in memory for that session. Each `lookup_drug_gene` call sends only a gene symbol and, optionally, a drug name. These requests carry a user-agent starting with `deepdna-mcp-local/0.1.1` and are handled like any other request to the public API, as the [privacy policy](https://deepdna.ai/privacy/) describes.
 - **What reaches the AI model:** what `read_dna_file` returns (the letters and counts at the curated positions) becomes part of your conversation with Claude, under Anthropic's terms.
 
 ## Links
 
 - Step-by-step walkthrough: <https://deepdna.ai/blog/read-23andme-file-with-claude/>
 - Terms: <https://deepdna.ai/terms/> · Privacy: <https://deepdna.ai/privacy/>
-- Issues: <https://github.com/alfonsoguv/deepdna-mcp/issues> (please don't post a DNA file, genotypes or medications there)
+- [Issues](https://github.com/alfonsoguv/deepdna-mcp/issues) (please don't post a DNA file, genotypes or medications there)
