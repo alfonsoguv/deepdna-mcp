@@ -3,7 +3,7 @@
   "name": "ai.deepdna/local",
   "title": "DeepDNA local",
   "description": "Reads a raw DNA file on your computer and reports the variants DeepDNA curates, with sources.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "websiteUrl": "https://github.com/alfonsoguv/deepdna-mcp",
   "repository": {
     "url": "https://github.com/alfonsoguv/deepdna-mcp",
@@ -13,7 +13,7 @@
     {
       "registryType": "pypi",
       "identifier": "deepdna-mcp",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"

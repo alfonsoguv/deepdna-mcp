@@ -85,7 +85,7 @@ The remote server takes no genotype: its tools have no field for one. For a raw 
 **Claude Code** (needs [uv](https://docs.astral.sh/uv/); the package is on [PyPI](https://pypi.org/project/deepdna-mcp/)):
 
 ```bash
-claude mcp add deepdna-local -- uvx deepdna-mcp@0.1.1
+claude mcp add deepdna-local -- uvx deepdna-mcp@0.1.2
 ```
 
 The [`plugin/`](plugin/) folder packages the same command as a Claude plugin, for Claude Code and for Cowork sessions on the user's computer.
@@ -95,7 +95,7 @@ Clients that use an `mcpServers` file (if the client cannot find `uvx`, put its 
 ```json
 {
   "mcpServers": {
-    "deepdna-local": { "command": "uvx", "args": ["deepdna-mcp@0.1.1"] }
+    "deepdna-local": { "command": "uvx", "args": ["deepdna-mcp@0.1.2"] }
   }
 }
 ```
