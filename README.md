@@ -24,7 +24,7 @@ All five tools are read-only.
 
 Two prompts, `medication_review` and `explain_variant`, package the common questions for clients that show MCP prompts.
 
-Coverage today is 12 genes: CYP2C19, CYP2C9, CYP2D6, SLCO1B1, VKORC1, UGT1A1, G6PD, MTHFR, COMT, HFE, APOE and BRCA1, with 51 curated drug–gene pairs across 11 of them: 40 cite a CPIC or DPWG guideline, the rest a drug label or the primary literature; the `basis` field in `check_medications` says which (`guideline` is null, or "drug label", when no guideline exists). It is a small, reviewed set, not a mirror of PharmGKB/ClinPGx. Every record lists its sources. The `level` field (the guideline's evidence grade) is `null` for every pair today.
+Coverage today is 16 genes: CYP2C19, CYP2C9, CYP2D6, CYP3A5, DPYD, TPMT, NUDT15, SLCO1B1, VKORC1, UGT1A1, G6PD, MTHFR, COMT, HFE, APOE and BRCA1, with 83 curated drug–gene pairs across 15 of them: 72 rest on a CPIC or DPWG guideline, the others on a drug label or the primary literature; the `basis` field in `check_medications` says which (`guideline` is "drug label" when the record rests on an FDA label, and null when it rests on the primary literature). It is a small, reviewed set, not a mirror of PharmGKB/ClinPGx. Every record lists its sources. The `level` field in `lookup_drug_gene` is CPIC's level for the gene–drug pair, copied from the CPIC database: 75 pairs have one (5 marked provisional) and the other 8 are `null`; the [API docs](https://deepdna.ai/docs/#pgx) explain the scale.
 
 ## Connect
 
