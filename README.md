@@ -24,7 +24,7 @@ All five tools are read-only.
 
 Two prompts, `medication_review` and `explain_variant`, package the common questions for clients that show MCP prompts.
 
-Coverage today is 16 genes: CYP2C19, CYP2C9, CYP2D6, CYP3A5, DPYD, TPMT, NUDT15, SLCO1B1, VKORC1, UGT1A1, G6PD, MTHFR, COMT, HFE, APOE and BRCA1, with 83 curated drug–gene pairs across 15 of them: 72 rest on a CPIC or DPWG guideline, the others on a drug label or the primary literature; the `basis` field in `check_medications` says which (`guideline` is "drug label" when the record rests on an FDA label, and null when it rests on the primary literature). It is a small, reviewed set, not a mirror of PharmGKB/ClinPGx. Every record lists its sources. The `level` field in `lookup_drug_gene` is CPIC's level for the gene–drug pair, copied from the CPIC database: 75 pairs have one (5 marked provisional) and the other 8 are `null`; the [API docs](https://deepdna.ai/docs/#pgx) explain the scale.
+Coverage today is 17 genes: CYP2C19, CYP2C9, CYP2D6, CYP3A5, CYP4F2, DPYD, TPMT, NUDT15, SLCO1B1, VKORC1, UGT1A1, G6PD, MTHFR, COMT, HFE, APOE and BRCA1, with 84 curated drug–gene pairs across 16 of them: 73 rest on a CPIC or DPWG guideline, the others on a drug label or the primary literature; the `basis` field in `check_medications` says which (`guideline` is "drug label" when the record rests on an FDA label, and null when it rests on the primary literature). It is a small, reviewed set, not a mirror of PharmGKB/ClinPGx. Every record lists its sources. The `level` field in `lookup_drug_gene` is CPIC's level for the gene–drug pair, copied from the CPIC database: 76 pairs have one (5 marked provisional) and the other 8 are `null`; the [API docs](https://deepdna.ai/docs/#pgx) explain the scale.
 
 ## Connect
 
@@ -85,7 +85,7 @@ The remote server takes no genotype: its tools have no field for one. For a raw 
 **Claude Code** (needs [uv](https://docs.astral.sh/uv/); the package is on [PyPI](https://pypi.org/project/deepdna-mcp/)):
 
 ```bash
-claude mcp add deepdna-local -- uvx deepdna-mcp@0.1.3
+claude mcp add deepdna-local -- uvx deepdna-mcp@0.1.4
 ```
 
 The [`plugin/`](plugin/) folder packages the same command as a Claude plugin, for Claude Code and for Cowork sessions on the user's computer.
@@ -95,7 +95,7 @@ Clients that use an `mcpServers` file (if the client cannot find `uvx`, put its 
 ```json
 {
   "mcpServers": {
-    "deepdna-local": { "command": "uvx", "args": ["deepdna-mcp@0.1.3"] }
+    "deepdna-local": { "command": "uvx", "args": ["deepdna-mcp@0.1.4"] }
   }
 }
 ```
@@ -118,7 +118,7 @@ Try it with: *"My 23andMe file is at /Users/me/Downloads/genome.txt. What does i
 ## What it is not
 
 - **The remote server does not read DNA files.** DeepDNA does not parse DNA files on its servers; to read one, use the local package above. A remote lookup carries a gene symbol, an rsID or a drug name. Its tools have no genotype field, and an undeclared argument is refused and not used. The alleles it reports are on the plus strand of GRCh37, as 23andMe raw data reports them.
-- **Neither server calls phenotypes or doses.** Turning a genotype into a metabolizer status needs phasing and the other variants in the gene, which a single lookup or a chip file does not give. Tools such as PharmCAT do that from a VCF.
+- **Neither server assigns a person a phenotype, a metabolizer status or a dose.** A drug–gene record can say what its guideline or label recommends for a phenotype group, dose adjustments included; that is the source's statement, not a result for anyone. Turning a genotype into a metabolizer status needs phasing and the other variants in the gene, which a single lookup or a chip file does not give. Tools such as PharmCAT do that from a VCF.
 - **Remote usage is counted, people are not.** Each request to the remote server is counted (method, tool, the lookup label described below, whether there was an answer, the client's name and version, its user-agent, a country code). IP addresses, request bodies and medication lists are not stored. A value typed into a declared field is recorded only as a short lookup label: an rsID in the form rs123, a gene from a fixed list of known pharmacogenes, or a drug DeepDNA covers; anything else, whatever it is, is recorded as "(other)". Please don't type a personal genetic result into these fields. See the [privacy policy](https://deepdna.ai/privacy/). The local package's downloads are ordinary requests to the public API, with the user-agent `deepdna-mcp-local/<version>`.
 - **A consumer chip is not a clinical test.** Arrays are reliable for common variants and much less so for rare ones; anything that could affect a health decision needs a validated test and a clinician.
 
