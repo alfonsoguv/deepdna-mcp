@@ -8,7 +8,7 @@ Chat on claude.ai does not start local servers. For chat, add `https://deepdna.a
 
 ## What it runs
 
-The plugin starts the open-source package [`deepdna-mcp`](https://pypi.org/project/deepdna-mcp/) 0.1.1 from PyPI with `uvx deepdna-mcp==0.1.1`. It needs [uv](https://docs.astral.sh/uv/) on your computer; on first run, uv downloads that package and its dependencies from PyPI and keeps them in its own cache. The source is in this repository, under `src/deepdna_mcp/`, MIT licensed.
+The plugin starts the open-source package [`deepdna-mcp`](https://pypi.org/project/deepdna-mcp/) 0.1.4 from PyPI with `uvx deepdna-mcp==0.1.4`. It needs [uv](https://docs.astral.sh/uv/) on your computer; on first run, uv downloads that package and its dependencies from PyPI and keeps them in its own cache. The source is in this repository, under `src/deepdna_mcp/`, MIT licensed.
 
 ## Use it
 
@@ -27,7 +27,7 @@ Ask Claude, for example: *"My 23andMe file is at /Users/me/Downloads/genome.txt.
 ## Data
 
 - **The file is read on your computer.** The package sends nothing from the file to DeepDNA or anyone else, and writes nothing to disk. What it reports from the file does reach the AI model, as the last point says.
-- **What it fetches:** the first time a tool needs them in a session, it downloads the same public records for every user from `https://deepdna.ai/api/v1` (the list of curated genes, each gene's record and each curated variant's record) and keeps them in memory for that session. Each `lookup_drug_gene` call sends only a gene symbol and, optionally, a drug name. These requests carry a user-agent starting with `deepdna-mcp-local/0.1.1` and are handled like any other request to the public API, as the [privacy policy](https://deepdna.ai/privacy/) describes.
+- **What it fetches:** the first time a tool needs them in a session, it downloads the same public records for every user from `https://deepdna.ai/api/v1` (the list of curated genes, each gene's record and each curated variant's record) and keeps them in memory for that session. Each `lookup_drug_gene` call sends only a gene symbol and, optionally, a drug name. These requests carry a user-agent starting with `deepdna-mcp-local/0.1.4` and are handled like any other request to the public API, as the [privacy policy](https://deepdna.ai/privacy/) describes.
 - **What reaches the AI model:** what `read_dna_file` returns (the letters and counts at the curated positions) becomes part of your conversation with Claude, under Anthropic's terms.
 
 ## Links
