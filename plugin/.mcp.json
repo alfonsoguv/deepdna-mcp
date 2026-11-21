@@ -2,7 +2,7 @@
   "mcpServers": {
     "deepdna-local": {
       "command": "uvx",
-      "args": ["deepdna-mcp==0.1.1"]
+      "args": ["deepdna-mcp==0.1.4"]
     }
   }
 }
